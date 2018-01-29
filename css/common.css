@@ -1,0 +1,35 @@
+* {
+	margin: 0px;
+	padding: 0px;
+}
+
+body {
+	height: 941px;
+}
+
+p {
+	margin: 0px !important;
+}
+
+.container-fluid {
+	height: 100%;
+}
+
+.header {
+	height: 50px;
+	background-color: #B0BEC5;
+}
+
+.title {
+	height: 100%;
+	line-height: 50px;
+	text-align: center;
+	font-size: 25px;
+	font-weight: bold;
+}
+
+svg {
+	width: 1000px;
+	height: 600px;
+	margin-top: 50px;
+}
