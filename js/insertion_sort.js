@@ -36,7 +36,7 @@ var colourTheSecond = colourArray[generatedColours[1]];
 var colourTheThird = colourArray[generatedColours[2]];
 var colourTheFourth = colourArray[generatedColours[3]];
 
-var transitionTime = 1500;
+var transitionTime = 750;
 var issPlaying;
 var animInterval;
 var currentStep;
@@ -394,7 +394,7 @@ this.insertionSort = function (callback) {
     var swapped;
 
     // Mark first element is sorted
-    state.status = 'Mark the first element ({first}) as sorted'.replace('{first}', state.backlinks[0].value);
+    state.status = "Mark the first element ({first}) as sorted".replace('{first}', state.backlinks[0].value);
     state.backlinks[0].highlight = HIGHLIGHT_SORTED;
     state.lineNo = 1;
     StateHelper.updateCopyPush(statelist, state);
@@ -403,20 +403,20 @@ this.insertionSort = function (callback) {
     for (var i = 1; i < numElements; i++) {
         state.backlinks[i].highlight = HIGHLIGHT_SPECIAL;
         state.lineNo = [2, 3];
-        state.status = 'Extract the first unsorted element ({val})'.replace('{val}', state.backlinks[i].value);
+        state.status = "Extract the first unsorted element ({val})".replace('{val}', state.backlinks[i].value);
         StateHelper.updateCopyPush(statelist, state);
 
         // Start loop backward from i index
         for (var j = (i - 1); j >= 0; j--) {
             state.backlinks[j].highlight = HIGHLIGHT_STANDARD;
             state.lineNo = 4;
-            state.status = 'Figure where to insert extracted element; comparing with sorted element {val}.'.replace('{val}', state.backlinks[j].value);
+            state.status = "Figure where to insert extracted element; comparing with sorted element {val}.".replace('{val}', state.backlinks[j].value);
             StateHelper.updateCopyPush(statelist, state);
             if (state.backlinks[j].value > state.backlinks[j + 1].value) {
                 // Swap
                 state.backlinks[j].highlight = HIGHLIGHT_SORTED;
                 state.lineNo = [5, 6];
-                state.status = '<div>{val1} > {val2} is true, hence move current sorted element ({val1}) to the right</div><div> by 1.</div>'.replace('{val1}', state.backlinks[j].value).replace('{val2}', state.backlinks[j + 1].value);
+                state.status = "<div>{val1} > {val2} is true, hence move current sorted element ({val1}) to the right</div><div> by 1.</div>".replace('{val1}', state.backlinks[j].value).replace('{val2}', state.backlinks[j + 1].value);
                 EntryBacklinkHelper.swapBacklinks(state.backlinks, j, j + 1);
                 StateHelper.updateCopyPush(statelist, state);
 
@@ -428,7 +428,7 @@ this.insertionSort = function (callback) {
                 state.backlinks[j].highlight = HIGHLIGHT_SORTED;
                 state.backlinks[j + 1].highlight = HIGHLIGHT_SORTED;
                 state.lineNo = 7;
-                state.status = '{val1} > {val2} is false, insert element at current position.'.replace('{val1}', state.backlinks[j].value).replace('{val2}', state.backlinks[j + 1].value);
+                state.status = "{val1} > {val2} is false, insert element at current position.".replace('{val1}', state.backlinks[j].value).replace('{val2}', state.backlinks[j + 1].value);
                 StateHelper.updateCopyPush(statelist, state);
                 break;
             }
@@ -439,6 +439,11 @@ this.insertionSort = function (callback) {
             }
         }
     }
+
+    state.lineNo = 0;
+    state.status = "List sorted!";
+    StateHelper.updateCopyPush(statelist, state);
+
     this.play(callback);
     return true;
 }
