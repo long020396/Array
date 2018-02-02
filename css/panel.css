@@ -1,5 +1,5 @@
 .panel {
-	position: fixed;
+    position: fixed;
     color: white;
     width: 0px;
     overflow: hidden;
@@ -13,7 +13,7 @@
     background: #777;
 }
 
-#codetrace, #status {
+#status, #codetrace, #actions {
     background: #eeeeee;
     font-family: "PT Sans" !important;
     font-size: 13px !important;
@@ -22,7 +22,7 @@
 }
 
 #status {
-	bottom: 240px;
+    bottom: 240px;
     right: 43px;
     height: 54px;
     white-space: normal;
@@ -38,7 +38,7 @@
     right: 0px;
     padding: 19px 14px 19px 15px;
     background-color: #42A5F5;
-    transform: rotate(180deg);
+    transform: rotate(180deg) !important;
     -ms-transform: rotate(180deg);
     -webkit-transform: rotate(180deg);
     -o-transform: rotate(180deg);
@@ -65,8 +65,48 @@
     bottom: 60px;
     right: 0px;
     padding: 88px 14px 88px 15px;
-    transform: rotate(180deg);
+    transform: rotate(180deg) !important;
     background-color: #66BB6A;
+    -ms-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+}
+
+#actions {
+    bottom: 60px;
+    left: 43px;
+    height: 64px;
+    font-family: "Courier New", Courier, monospace !important;
+    background-color: #D65775;
+}
+
+#actions p {
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+#actions p:hover {
+    background: black;
+    color: white;
+}
+
+#actions p:first-of-type {
+    padding-top: 10px;
+}
+
+#actions p:last-of-type {
+    padding-bottom: 10px;
+}
+
+#actions-hide {
+    bottom: 84px;
+    left: 0px;
+    padding: 19px 14px 19px 15px;
+    padding-left: 14px;
+    padding-right: 15px;
+    transform: rotate(180deg) !important;
+    background-color: #D65775;
     -ms-transform: rotate(180deg);
     -webkit-transform: rotate(180deg);
     -o-transform: rotate(180deg);

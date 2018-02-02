@@ -16,6 +16,7 @@ var maxNumOfElements = 20; 					// max 20 elements currently
 var gapBetweenPrimaryAndSecondaryRows = 30; // of the bars
 var maxElementValue = 50;
 var statusCodetraceWidth = 420;
+var actionsWidth = 150;
 
 // Green, Pink, Blue, Red, Yellow, Indigo, Orange, Lime
 var colourArray = ["#52bc69", "#d65775", "#2ebbd1", "#d9513c", "#fec515", "#4b65ba", "#ff8a27", "#a7d41e"];
@@ -203,15 +204,30 @@ var populatePseudoCode = function (code) {
 function initUI() {
     $('#status-hide img').addClass('rotateLeft');
     $('#codetrace-hide img').addClass('rotateLeft');
+    $('#actions-hide img').addClass('rotateRight');
 }
 
 $(function () {
     initUI();
     createList();
-    insertionSort();
+    // insertionSort();
+    // cocktailShakerSort();
     showStatusPanel();
     showCodetracePanel();
-    // d3.select("body").append("p").text("new paragraph!");
+});
+
+$('li').click(function () {
+    var str = $(this).text();
+    $('.title').html(str);
+});
+
+$('#sort').click(function () {
+   var str = $('.title').text();
+   if (str === 'Insertion sort') {
+       insertionSort();
+   } else if (str === 'Cocktail Shaker sort') {
+       cocktailShakerSort();
+   }
 });
 
 $('#status-hide').click(function () {
@@ -222,12 +238,19 @@ $('#status-hide').click(function () {
     }
 });
 
-
 $('#codetrace-hide').click(function () {
     if (isCodetraceOpen()) {
         hideCodetracePanel();
     } else {
         showCodetracePanel();
+    }
+});
+
+$('#actions-hide').click(function () {
+    if (isActionsOpen()) {
+        hideActionsPanel();
+    } else {
+        showActionsPanel();
     }
 });
 
@@ -239,31 +262,49 @@ function isCodetraceOpen() {
     return $('#codetrace-hide img').hasClass('rotateRight');
 }
 
+function isActionsOpen() {
+    return $('#actions-hide img').hasClass('rotateLeft');
+}
+
 function showStatusPanel() {
     if (!isStatusOpen()) {
         $('#status-hide img').removeClass('rotateLeft').addClass('rotateRight');
-        $('#status').animate({width: "+=" + statusCodetraceWidth,});
+        $('#status').animate({width: "+=" + statusCodetraceWidth});
     }
 }
 
 function hideStatusPanel() {
     if (isStatusOpen()) {
         $('#status-hide img').removeClass('rotateRight').addClass('rotateLeft');
-        $('#status').animate({width: "-=" + statusCodetraceWidth,});
+        $('#status').animate({width: "-=" + statusCodetraceWidth});
     }
 }
 
 function showCodetracePanel() {
     if (!isCodetraceOpen()) {
         $('#codetrace-hide img').removeClass('rotateLeft').addClass('rotateRight');
-        $('#codetrace').animate({width: "+=" + statusCodetraceWidth,});
+        $('#codetrace').animate({width: "+=" + statusCodetraceWidth});
     }
 }
 
 function hideCodetracePanel() {
     if (isCodetraceOpen()) {
         $('#codetrace-hide img').removeClass('rotateRight').addClass('rotateLeft');
-        $('#codetrace').animate({width: "-=" + statusCodetraceWidth,});
+        $('#codetrace').animate({width: "-=" + statusCodetraceWidth});
+    }
+}
+
+function showActionsPanel() {
+    if (!isActionsOpen()) {
+        $('#actions-hide img').removeClass('rotateRight').addClass('rotateLeft');
+        $('#actions').animate({width: "+=" + actionsWidth});
+    }
+}
+
+function hideActionsPanel() {
+    if (isActionsOpen()) {
+        $('#actions-hide img').removeClass('rotateLeft').addClass('rotateRight');
+        $('#actions').animate({width: "-=" + actionsWidth});
     }
 }
 
@@ -377,6 +418,11 @@ this.play = function (callback) {
     }, transitionTime);
 }
 
+this.pause = function () {
+    issPlaying = false;
+    clearInterval(animInterval);
+}
+
 this.insertionSort = function (callback) {
     var numElements = statelist[0].backlinks.length;
     var state = StateHelper.copyState(statelist[0]);
@@ -390,8 +436,6 @@ this.insertionSort = function (callback) {
         '        move sorted element to the right by 1',
         '      break loop and insert X here'
     ]);
-
-    var swapped;
 
     // Mark first element is sorted
     state.status = "Mark the first element ({first}) as sorted".replace('{first}', state.backlinks[0].value);
@@ -418,7 +462,6 @@ this.insertionSort = function (callback) {
                 state.lineNo = [5, 6];
                 state.status = "<div>{val1} > {val2} is true, hence move current sorted element ({val1}) to the right</div><div> by 1.</div>".replace('{val1}', state.backlinks[j].value).replace('{val2}', state.backlinks[j + 1].value);
                 EntryBacklinkHelper.swapBacklinks(state.backlinks, j, j + 1);
-                StateHelper.updateCopyPush(statelist, state);
 
                 if (j > 0) {
                     state.backlinks[j - 1].highlight = HIGHLIGHT_STANDARD;
@@ -437,11 +480,105 @@ this.insertionSort = function (callback) {
                 state.backlinks[j].highlight = HIGHLIGHT_SORTED;
                 StateHelper.updateCopyPush(statelist, state);
             }
-        }
-    }
+        } // End backward loop
+    } // End forward loop
 
     state.lineNo = 0;
     state.status = "List sorted!";
+    StateHelper.updateCopyPush(statelist, state);
+
+    this.play(callback);
+    return true;
+}
+
+this.cocktailShakerSort = function (callback) {
+    var numElements = statelist[0].backlinks.length;
+    var state = StateHelper.copyState(statelist[0]);
+
+    var swapped = true;
+    var start = 0;
+    var end = numElements;
+
+    // Start while loop
+    while (swapped) {
+        // Reset the swapped flag to enter the loop
+        swapped = false;
+
+        // Start loop forward, sort like bubble sort
+        for (var i = start; i < end - 1; i++) {
+            state.backlinks[i].highlight = HIGHLIGHT_STANDARD;
+            StateHelper.updateCopyPush(statelist, state);
+
+            if (i + 1 <= end) {
+                state.backlinks[i + 1].highlight = HIGHLIGHT_SPECIAL;
+                StateHelper.updateCopyPush(statelist, state);
+            }
+
+            if (state.backlinks[i].value > state.backlinks[i + 1].value) {
+                EntryBacklinkHelper.swapBacklinks(state.backlinks, i, i + 1);
+                state.backlinks[i].highlight = HIGHLIGHT_NONE;
+                if (i === end - 2) {
+                    state.backlinks[end - 1].highlight = HIGHLIGHT_SORTED;
+                }
+                StateHelper.updateCopyPush(statelist, state);
+                swapped = true;
+            } else {
+                state.backlinks[i].highlight = HIGHLIGHT_NONE;
+                if (i < end - 2) {
+                    state.backlinks[i + 1].highlight = HIGHLIGHT_STANDARD;
+                } else if (i === end - 2) {
+                    state.backlinks[end - 1].highlight = HIGHLIGHT_SORTED;
+                }
+                StateHelper.updateCopyPush(statelist, state);
+            }
+        }
+
+        if (!swapped) {
+            break;
+        }
+
+        // Set swapped flag to run loop backward
+        swapped = false;
+
+        // Last index is already sorted
+        end = end - 1;
+
+        for (var i = end - 1; i > start; i--) {
+            state.backlinks[i].highlight = HIGHLIGHT_STANDARD;
+            StateHelper.updateCopyPush(statelist, state);
+
+            if (i - 1 >= start) {
+                state.backlinks[i - 1].highlight = HIGHLIGHT_SPECIAL;
+                StateHelper.updateCopyPush(statelist, state);
+            }
+
+            if (state.backlinks[i].value < state.backlinks[i - 1].value) {
+                EntryBacklinkHelper.swapBacklinks(state.backlinks, i, i - 1);
+                state.backlinks[i].highlight = HIGHLIGHT_NONE;
+                if (i === start + 1) {
+                    state.backlinks[start].highlight = HIGHLIGHT_SORTED;
+                }
+                StateHelper.updateCopyPush(statelist, state);
+                swapped = true;
+            } else {
+                state.backlinks[i].highlight = HIGHLIGHT_NONE;
+                if (i > start + 1) {
+                    state.backlinks[i - 1].highlight = HIGHLIGHT_STANDARD;
+                } else if (i === start + 1) {
+                    state.backlinks[start].highlight = HIGHLIGHT_SORTED;
+                }
+                StateHelper.updateCopyPush(statelist, state);
+            }
+        }
+
+        // First index is already sorted
+        start = start + 1;
+    } // End while loop
+
+    state.status = "List sorted!";
+    for (var i = 0; i < numElements; i++) {
+        state.backlinks[i].highlight = HIGHLIGHT_SORTED;
+    }
     StateHelper.updateCopyPush(statelist, state);
 
     this.play(callback);

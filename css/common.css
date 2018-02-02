@@ -33,3 +33,12 @@ svg {
 	height: 600px;
 	margin-top: 50px;
 }
+
+li {
+	padding: 2px 0px 2px 16px;
+}
+
+li:hover {
+	cursor: pointer;
+	background-color: gray;
+}
