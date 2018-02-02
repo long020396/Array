@@ -37,7 +37,7 @@ var colourTheSecond = colourArray[generatedColours[1]];
 var colourTheThird = colourArray[generatedColours[2]];
 var colourTheFourth = colourArray[generatedColours[3]];
 
-var transitionTime = 750;
+var transitionTime = 300;
 var issPlaying;
 var animInterval;
 var currentStep;
