@@ -201,19 +201,9 @@ var populatePseudoCode = function (code) {
     }
 }
 
-function initUI() {
-    $('#status-hide img').addClass('rotateLeft');
-    $('#codetrace-hide img').addClass('rotateLeft');
-    $('#actions-hide img').addClass('rotateRight');
-}
-
 $(function () {
     initUI();
-    createList();
-    // insertionSort();
-    // cocktailShakerSort();
-    showStatusPanel();
-    showCodetracePanel();
+    createList('random');
 });
 
 $('li').click(function () {
@@ -221,7 +211,23 @@ $('li').click(function () {
     $('.title').html(str);
 });
 
+$('#create-random').click(function () {
+    createList('random');
+});
+
+$('#create-userdefined-go').click(function () {
+    createList('userdefined');
+});
+
+$('#create').click(function () {
+    showCreateActionsPanel();
+});
+
 $('#sort').click(function () {
+    hideActionsPanel();
+    showStatusPanel();
+    showCodetracePanel();
+
    var str = $('.title').text();
    if (str === 'Insertion sort') {
        insertionSort();
@@ -229,84 +235,6 @@ $('#sort').click(function () {
        cocktailShakerSort();
    }
 });
-
-$('#status-hide').click(function () {
-    if (isStatusOpen()) {
-        hideStatusPanel();
-    } else {
-        showStatusPanel();
-    }
-});
-
-$('#codetrace-hide').click(function () {
-    if (isCodetraceOpen()) {
-        hideCodetracePanel();
-    } else {
-        showCodetracePanel();
-    }
-});
-
-$('#actions-hide').click(function () {
-    if (isActionsOpen()) {
-        hideActionsPanel();
-    } else {
-        showActionsPanel();
-    }
-});
-
-function isStatusOpen() {
-    return $('#status-hide img').hasClass('rotateRight');
-}
-
-function isCodetraceOpen() {
-    return $('#codetrace-hide img').hasClass('rotateRight');
-}
-
-function isActionsOpen() {
-    return $('#actions-hide img').hasClass('rotateLeft');
-}
-
-function showStatusPanel() {
-    if (!isStatusOpen()) {
-        $('#status-hide img').removeClass('rotateLeft').addClass('rotateRight');
-        $('#status').animate({width: "+=" + statusCodetraceWidth});
-    }
-}
-
-function hideStatusPanel() {
-    if (isStatusOpen()) {
-        $('#status-hide img').removeClass('rotateRight').addClass('rotateLeft');
-        $('#status').animate({width: "-=" + statusCodetraceWidth});
-    }
-}
-
-function showCodetracePanel() {
-    if (!isCodetraceOpen()) {
-        $('#codetrace-hide img').removeClass('rotateLeft').addClass('rotateRight');
-        $('#codetrace').animate({width: "+=" + statusCodetraceWidth});
-    }
-}
-
-function hideCodetracePanel() {
-    if (isCodetraceOpen()) {
-        $('#codetrace-hide img').removeClass('rotateRight').addClass('rotateLeft');
-        $('#codetrace').animate({width: "-=" + statusCodetraceWidth});
-    }
-}
-
-function showActionsPanel() {
-    if (!isActionsOpen()) {
-        $('#actions-hide img').removeClass('rotateRight').addClass('rotateLeft');
-        $('#actions').animate({width: "+=" + actionsWidth});
-    }
-}
-
-function hideActionsPanel() {
-    if (isActionsOpen()) {
-        $('#actions-hide img').removeClass('rotateLeft').addClass('rotateRight');
-        $('#actions').animate({width: "-=" + actionsWidth});
-    }
-}
 
 var drawState = function (stateIndex) {
     drawBars(statelist[stateIndex]);
@@ -366,6 +294,10 @@ var drawBars = function (state) {
         .attr("transform", FunctionList.g_transform)
 };
 
+this.convertToNumber = function (num) {
+    return +num;
+}
+
 this.loadNumberList = function (numArray) {
     issPlaying = false;
     currentStep = 0;
@@ -374,11 +306,44 @@ this.loadNumberList = function (numArray) {
     drawState(0);
 }
 
-this.createList = function () {
+this.createList = function (type) {
     var numArrayMaxListSize = 20;
     var numArrayMaxElementValue = maxElementValue;
 
     var numArray = generateRandomNumberArray(generateRandomNumber(10, numArrayMaxListSize), numArrayMaxElementValue);
+
+    switch (type) {
+        case 'random':
+            break;
+        case 'userdefined':
+            numArray = $('#userdefined-input').val().split(",");
+
+            if (numArray.length > maxNumOfElements) {
+                $("#create-err").html('You can&#39;t have more than {maxSize} elements!'.replace("{maxSize}", numArrayMaxListSize));
+                return false;
+            }
+
+            for (var i = 0; i < numArray.length; i++) {
+                var tmp = convertToNumber(numArray[i]);
+
+                if (numArray[i].trim() == "") {
+                    $('#create-err').html('Missing an element (duplicate comma)');
+                    return false;
+                }
+                if (isNaN(tmp)) {
+                    $('#create-err').html('There&#39;s an invalid element (not number): {num}'.replace('{num}', numArray[i]));
+                    return false;
+                }
+                if (tmp < 1 || tmp > numArrayMaxElementValue) {
+                    $("#create-err").html('Element must be in range from 1 to {maxValue}. (Out of range number: {num}.)'.replace("{maxValue}", numArrayMaxElementValue).replace("{num}", numArray[i]));
+                    return false;
+                }
+
+                numArray[i] = convertToNumber(numArray[i]);
+            }
+
+            $('#create-err').html('');
+    }
 
     this.loadNumberList(numArray);
 }
@@ -402,25 +367,6 @@ var drawCurrentState = function () {
     }
     else
         $('#play img').attr('src', 'https://visualgo.net/img/play.png').attr('alt', 'play').attr('title', 'play');
-}
-
-this.play = function (callback) {
-    issPlaying = true;
-    drawCurrentState();
-    animInterval = setInterval(function () {
-        drawCurrentState();
-        if (currentStep < (statelist.length - 1))
-            currentStep++;
-        else {
-            clearInterval(animInterval);
-            if (typeof callback == 'function') callback();
-        }
-    }, transitionTime);
-}
-
-this.pause = function () {
-    issPlaying = false;
-    clearInterval(animInterval);
 }
 
 this.insertionSort = function (callback) {

@@ -13,6 +13,45 @@
     background: #777;
 }
 
+.execAction {
+    cursor: pointer;
+    padding: 8px 8px;
+}
+
+.execAction p:hover {
+    background-color: black;
+}
+
+.action-menu-pullout {
+    /*display: none;*/
+    position: fixed;
+    bottom: 108px;
+    left: 195px;
+}
+
+.action-menu-pullout > div {
+    float: left;
+    color: white;
+    background-color: #D65775;
+}
+
+.new-menu-option {
+    margin-left: 3px;
+}
+
+#create-userdefined-input input {
+    width: 300px;
+}
+
+#actions-extras input {
+    padding: 5px 8px 7px;
+}
+
+.action-menu-pullout input {
+    background-color: black;
+    color: white;
+}
+
 #status, #codetrace, #actions {
     background: #eeeeee;
     font-family: "PT Sans" !important;
@@ -87,7 +126,7 @@
 }
 
 #actions p:hover {
-    background: black;
+    background-color: black;
     color: white;
 }
 

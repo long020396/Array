@@ -14,7 +14,7 @@
     <div class="row">
         <div class="header col-lg-12">
             <div class="col-lg-4"></div>
-            <div class="col-lg-4 title" ></div>
+            <div class="col-lg-4 title"></div>
             <div class="col-lg-4"></div>
         </div>
     </div>
@@ -53,11 +53,27 @@
 
         <!--Actions panel-->
         <div id="actions" class="panel">
-            <p>Create</p>
+            <p id="create">Create</p>
             <p id="sort">Sort</p>
         </div>
         <div id="actions-hide" class="panel-hide">
             <img src="https://visualgo.net/img/arrow_white_right.png" alt=">" title="show/hide actions panel"/>
+        </div>
+        <!--Actions extra panel-->
+        <div id="actions-extras">
+            <div class="create action-menu-pullout">
+                <div id="create-random" class="execAction new-menu-option">
+                    <p>Random</p>
+                </div>
+                <div id="create-userdefined-input" class="new-menu-option">
+                    <input type="text" id="userdefined-input" title="Enter a list of numbers, separated by commas."
+                           autocomplete="off"/>
+                </div>
+                <div id="create-userdefined-go" class="execAction new-menu-option">
+                    <p>Go</p>
+                </div>
+                <div id="create-err" class="err"></div>
+            </div>
         </div>
 
         <svg id="viz-canvas"></svg>
@@ -69,5 +85,6 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script src="js/insertion_sort.js"></script>
+    <script src="js/viz.js"></script>
 </footer>
 </html>

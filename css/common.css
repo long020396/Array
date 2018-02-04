@@ -1,7 +1,7 @@
-* {
-	margin: 0px;
-	padding: 0px;
-}
+/** {*/
+	/*margin: 0px;*/
+	/*padding: 0px;*/
+/*}*/
 
 body {
 	height: 941px;
@@ -41,4 +41,11 @@ li {
 li:hover {
 	cursor: pointer;
 	background-color: gray;
+}
+
+.err {
+	margin-left: 6px;
+	padding: 5px 0px;
+	background: none !important;
+	color: red !important;
 }
