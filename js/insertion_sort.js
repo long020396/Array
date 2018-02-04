@@ -37,7 +37,7 @@ var colourTheSecond = colourArray[generatedColours[1]];
 var colourTheThird = colourArray[generatedColours[2]];
 var colourTheFourth = colourArray[generatedColours[3]];
 
-var transitionTime = 300;
+var transitionTime = 750;
 var issPlaying;
 var animInterval;
 var currentStep;
@@ -397,6 +397,7 @@ this.insertionSort = function (callback) {
         state.lineNo = [2, 3];
         state.status = "Extract the first unsorted element ({val})".replace('{val}', state.backlinks[i].value);
         StateHelper.updateCopyPush(statelist, state);
+        state.backlinks[i].secondaryPositionStatus = POSITION_USE_SECONDARY_IN_DEFAULT_POSITION;
 
         // Start loop backward from i index
         for (var j = (i - 1); j >= 0; j--) {
@@ -420,13 +421,19 @@ this.insertionSort = function (callback) {
                 state.backlinks[j + 1].highlight = HIGHLIGHT_SORTED;
                 state.lineNo = 7;
                 state.status = "{val1} > {val2} is false, insert element at current position.".replace('{val1}', state.backlinks[j].value).replace('{val2}', state.backlinks[j + 1].value);
+                state.backlinks[j + 1].secondaryPositionStatus = POSITION_USE_PRIMARY;
                 StateHelper.updateCopyPush(statelist, state);
                 break;
             }
 
             if (j == 0) {
+                StateHelper.updateCopyPush(statelist, state);
+
+                state.backlinks[j].secondaryPositionStatus = POSITION_USE_PRIMARY;
+                // StateHelper.updateCopyPush(statelist, state);
                 state.backlinks[j].highlight = HIGHLIGHT_SORTED;
                 StateHelper.updateCopyPush(statelist, state);
+
             }
         } // End backward loop
     } // End forward loop
@@ -464,6 +471,8 @@ this.cocktailShakerSort = function (callback) {
 
             if (state.backlinks[i].value > state.backlinks[i + 1].value) {
                 EntryBacklinkHelper.swapBacklinks(state.backlinks, i, i + 1);
+                StateHelper.updateCopyPush(statelist, state);
+
                 state.backlinks[i].highlight = HIGHLIGHT_NONE;
                 if (i === end - 2) {
                     state.backlinks[end - 1].highlight = HIGHLIGHT_SORTED;
@@ -502,6 +511,8 @@ this.cocktailShakerSort = function (callback) {
 
             if (state.backlinks[i].value < state.backlinks[i - 1].value) {
                 EntryBacklinkHelper.swapBacklinks(state.backlinks, i, i - 1);
+                StateHelper.updateCopyPush(statelist, state);
+
                 state.backlinks[i].highlight = HIGHLIGHT_NONE;
                 if (i === start + 1) {
                     state.backlinks[start].highlight = HIGHLIGHT_SORTED;
@@ -545,14 +556,27 @@ this.shellSort = function (callback) {
 
             for (var j = i; j >= gap;) {
                 state.backlinks[j].highlight = HIGHLIGHT_STANDARD;
+                state.backlinks[j].secondaryPositionStatus = POSITION_USE_SECONDARY_IN_DEFAULT_POSITION;
                 state.backlinks[j - gap].highlight = HIGHLIGHT_STANDARD;
+                state.backlinks[j - gap].secondaryPositionStatus = POSITION_USE_SECONDARY_IN_DEFAULT_POSITION;
                 StateHelper.updateCopyPush(statelist, state);
                 if (state.backlinks[j - gap].value > state.backlinks[j].value) {
                     EntryBacklinkHelper.swapBacklinks(state.backlinks, j, j - gap);
+                    StateHelper.updateCopyPush(statelist, state);
+
+                    state.backlinks[j].secondaryPositionStatus = POSITION_USE_PRIMARY;
+                    state.backlinks[j - gap].secondaryPositionStatus = POSITION_USE_PRIMARY;
+                    StateHelper.updateCopyPush(statelist, state);
+
+
                     state.backlinks[j].highlight = HIGHLIGHT_NONE;
                     state.backlinks[j - gap].highlight = HIGHLIGHT_NONE;
                     StateHelper.updateCopyPush(statelist, state);
                 } else {
+                    state.backlinks[j].secondaryPositionStatus = POSITION_USE_PRIMARY;
+                    state.backlinks[j - gap].secondaryPositionStatus = POSITION_USE_PRIMARY;
+                    StateHelper.updateCopyPush(statelist, state);
+
                     state.backlinks[j].highlight = HIGHLIGHT_NONE;
                     state.backlinks[j - gap].highlight = HIGHLIGHT_NONE;
                     StateHelper.updateCopyPush(statelist, state);
