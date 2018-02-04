@@ -233,6 +233,8 @@ $('#sort').click(function () {
        insertionSort();
    } else if (str === 'Cocktail Shaker sort') {
        cocktailShakerSort();
+   } else if (str === 'Shell sort') {
+       shellSort();
    }
 });
 
@@ -266,7 +268,7 @@ var drawBars = function (state) {
 
     newData.append("text")
         .attr("dy", ".35em")
-        .attr("x", (barWidth - gapBetweenBars) / 2)
+        .attr("x", ((barWidth - gapBetweenBars) / 2) - 6.5)
         .attr("y", FunctionList.text_y)
         .text(function (d) {
             return d.value;
@@ -528,5 +530,46 @@ this.cocktailShakerSort = function (callback) {
     StateHelper.updateCopyPush(statelist, state);
 
     this.play(callback);
+    return true;
+}
+
+this.shellSort = function (callback) {
+    var numElements = statelist[0].backlinks.length;
+    var state = StateHelper.copyState(statelist[0]);
+
+    // Start big gap loop, then reduce gap by 1
+    // You have to floor the gap, or it will get bug
+    for (var gap = Math.floor(numElements / 2); gap > 0; gap = Math.floor(gap / 2)) {
+
+        for (var i = gap; i < numElements; i++) {
+
+            for (var j = i; j >= gap;) {
+                state.backlinks[j].highlight = HIGHLIGHT_STANDARD;
+                state.backlinks[j - gap].highlight = HIGHLIGHT_STANDARD;
+                StateHelper.updateCopyPush(statelist, state);
+                if (state.backlinks[j - gap].value > state.backlinks[j].value) {
+                    EntryBacklinkHelper.swapBacklinks(state.backlinks, j, j - gap);
+                    state.backlinks[j].highlight = HIGHLIGHT_NONE;
+                    state.backlinks[j - gap].highlight = HIGHLIGHT_NONE;
+                    StateHelper.updateCopyPush(statelist, state);
+                } else {
+                    state.backlinks[j].highlight = HIGHLIGHT_NONE;
+                    state.backlinks[j - gap].highlight = HIGHLIGHT_NONE;
+                    StateHelper.updateCopyPush(statelist, state);
+                    break;
+                }
+                j -= gap;
+            }
+        } // End for i
+
+    } // End for gap
+
+    state.status = "List sorted!";
+    for (var i = 0; i < numElements; i++) {
+        state.backlinks[i].highlight = HIGHLIGHT_SORTED;
+        StateHelper.updateCopyPush(statelist, state);
+    }
+    this.play(callback);
+
     return true;
 }
