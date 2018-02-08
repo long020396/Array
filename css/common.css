@@ -49,3 +49,10 @@ li:hover {
 	background: none !important;
 	color: red !important;
 }
+
+.svg-container i {
+	font-size: 25px;
+	cursor: pointer;
+	margin: 5px 10px 5px 10px;
+}
+

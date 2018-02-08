@@ -2,7 +2,8 @@ function initUI() {
     $('#actions-hide img').addClass('rotateLeft');
     $('#status-hide img').addClass('rotateRight');
     $('#codetrace-hide img').addClass('rotateRight');
-    $('.create').css('display', 'none');
+    $('.create').hide();
+    $('#play').hide();
 }
 
 function isActionsOpen() {
@@ -24,11 +25,11 @@ function showActionsPanel() {
 }
 
 function showCreateActionsPanel() {
-    $('.create').css('display', '');
+    $('.create').show();
 }
 
 function hideCreateActionsPanel() {
-    $('.create').css('display', 'none');
+    $('.create').hide();
     $('#create-err').html('');
 }
 
@@ -93,20 +94,64 @@ $('#actions-hide').click(function () {
 });
 
 this.play = function (callback) {
-    issPlaying = true;
-    drawCurrentState();
-    animInterval = setInterval(function () {
+    if (!issPlaying) {
+        issPlaying = true;
         drawCurrentState();
-        if (currentStep < (statelist.length - 1))
-            currentStep++;
-        else {
-            clearInterval(animInterval);
-            if (typeof callback == 'function') callback();
-        }
-    }, transitionTime);
-}
+        animInterval = setInterval(function () {
+            drawCurrentState();
+            if (currentStep < (statelist.length - 1))
+                currentStep++;
+            else {
+                clearInterval(animInterval);
+                if (typeof callback == 'function') callback();
+            }
+        }, transitionTime);
+        $('#pause').show();
+        $('#play').hide();
+    }
+};
 
 this.pause = function () {
     issPlaying = false;
     clearInterval(animInterval);
-}
+    if (animInterval !== undefined) {
+        $('#pause').hide();
+        $('#play').show();
+    }
+};
+
+this.goToBeginning = function () {
+    if (issPlaying) {
+        pause();
+    }
+    currentStep = 0;
+    drawState(currentStep);
+};
+
+this.stepBackward = function () {
+    if (issPlaying) {
+        pause();
+    }
+    if (currentStep > 0) {
+        currentStep--;
+        drawState(currentStep);
+    }
+};
+
+this.stepForward = function () {
+    if (issPlaying) {
+        pause();
+    }
+    if (currentStep < statelist.length - 1) {
+        currentStep++;
+        drawState(currentStep);
+    }
+};
+
+this.goToEnd = function () {
+    if (issPlaying) {
+        pause();
+    }
+    currentStep = statelist.length - 1;
+    drawState(currentStep)
+};

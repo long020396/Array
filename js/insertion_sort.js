@@ -37,7 +37,7 @@ var colourTheSecond = colourArray[generatedColours[1]];
 var colourTheThird = colourArray[generatedColours[2]];
 var colourTheFourth = colourArray[generatedColours[3]];
 
-var transitionTime = 750;
+var transitionTime = 350;
 var issPlaying;
 var animInterval;
 var currentStep;
@@ -227,6 +227,7 @@ $('#sort').click(function () {
     hideActionsPanel();
     showStatusPanel();
     showCodetracePanel();
+    $('#timeline').show();
 
    var str = $('.title').text();
    if (str === 'Insertion sort') {
@@ -235,12 +236,15 @@ $('#sort').click(function () {
        cocktailShakerSort();
    } else if (str === 'Shell sort') {
        shellSort();
+   } else if (str === 'Merge sort') {
+       mergeSort();
    }
 });
 
 var drawState = function (stateIndex) {
     drawBars(statelist[stateIndex]);
     $('#status p').html(statelist[stateIndex].status);
+    // $('#log').html(statelist[stateIndex].logMessage);
     highlightLine(statelist[stateIndex].lineNo);
 }
 
@@ -591,9 +595,94 @@ this.shellSort = function (callback) {
     state.status = "List sorted!";
     for (var i = 0; i < numElements; i++) {
         state.backlinks[i].highlight = HIGHLIGHT_SORTED;
-        StateHelper.updateCopyPush(statelist, state);
     }
+    StateHelper.updateCopyPush(statelist, state);
     this.play(callback);
 
     return true;
+}
+
+this.mergeSort = function (callback) {
+    var numElements = statelist[0].backlinks.length;
+    var state = StateHelper.copyState(statelist[0]);
+
+    populatePseudoCode([
+        'split each element into partitions of size 1',
+        'recursively merge adjancent partitions',
+        '  for i = leftPartStartIndex to rightPartLastIndex inclusive',
+        '    if leftPartHeadValue <= rightPartHeadValue',
+        '      copy leftPartHeadValue',
+        '    else: copy rightPartHeadValue',
+        'copy elements back to original array'
+    ]);
+
+    this.mergeSortSplit(state, 0, numElements);
+
+    state.status = "List sorted!";
+    for (var i = 0; i < numElements; i++) {
+        state.backlinks[i].highlight = HIGHLIGHT_SORTED;
+    }
+    StateHelper.updateCopyPush(statelist, state);
+    this.play(callback);
+
+    return true;
+}
+
+this.mergeSortSplit = function (state, startIndex, endIndex) {
+    if (endIndex - startIndex <= 1) {
+        return;
+    }
+
+    var midIndex = Math.ceil((startIndex + endIndex) / 2);
+    this.mergeSortSplit(state, startIndex, midIndex);
+    this.mergeSortSplit(state, midIndex, endIndex);
+    this.mergeSortMerge(state, startIndex, midIndex, endIndex);
+
+    // Copy sorted array back to original array
+    state.status = "Copy sorted elements back to original array.";
+    state.lineNo = 7;
+
+    var duplicatedArray = new Array();
+    for (var i = startIndex; i < endIndex; i++) {
+        var newPosition = state.backlinks[i].secondaryPositionStatus;
+        duplicatedArray[newPosition] = state.backlinks[i];
+    }
+
+    for (var i = startIndex; i < endIndex; i++) {
+        state.backlinks[i] = duplicatedArray[i];
+    }
+
+    for (var i = startIndex; i < endIndex; i++) {
+        state.backlinks[i].secondaryPositionStatus = POSITION_USE_PRIMARY;
+        state.backlinks[i].highlight = HIGHLIGHT_NONE;
+        StateHelper.updateCopyPush(statelist, state);
+    }
+}
+
+this.mergeSortMerge = function (state, startIndex, midIndex, endIndex) {
+    var leftIndex = startIndex;
+    var rightIndex = midIndex;
+
+    for (var i = startIndex; i < endIndex; i++) {
+        state.backlinks[i].highlight = HIGHLIGHT_STANDARD;
+    }
+    state.lineNo = 2;
+    StateHelper.updateCopyPush(statelist, state);
+
+    for (var i = startIndex; i < endIndex; i++) {
+
+        if (leftIndex < midIndex && (rightIndex >= endIndex || state.backlinks[leftIndex].value <= state.backlinks[rightIndex].value)) {
+            state.backlinks[leftIndex].secondaryPositionStatus = i;
+            state.lineNo = [3, 4, 5];
+
+            leftIndex++;
+            StateHelper.updateCopyPush(statelist, state);
+        } else {
+            state.backlinks[rightIndex].secondaryPositionStatus = i;
+            state.lineNo  = [3, 6];
+
+            rightIndex++;
+            StateHelper.updateCopyPush(statelist, state);
+        }
+    }
 }

@@ -20,64 +20,86 @@
     </div>
     <div class="menu col-lg-1">
         <div class="dropdown">
-            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+            <button id="selected-algorithm" class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
                 Select Algorithm <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
                 <li>Insertion sort</li>
                 <li>Cocktail Shaker sort</li>
                 <li>Shell sort</li>
+                <li>Merge sort</li>
             </ul>
         </div>
     </div>
-    <div class=" content col-lg-11">
+    <div class="content col-lg-8">
 
-        <!--Status panel-->
-        <div id="status" class="panel"><p></p></div>
-        <div id="status-hide" class="panel-hide">
-            <img src="https://visualgo.net/img/arrow_white_right.png" alt=">" title="show/hide status panel"/>
-        </div>
-
-        <!-- Codetrace panel-->
-        <div id="codetrace" class="panel">
-            <p id="code1" style="padding-top: 10px;"></p>
-            <p id="code2"></p>
-            <p id="code3"></p>
-            <p id="code4"></p>
-            <p id="code5"></p>
-            <p id="code6"></p>
-            <p id="code7" style="padding-bottom: 10px;"></p>
-        </div>
-        <div id="codetrace-hide" class="panel-hide">
-            <img src="https://visualgo.net/img/arrow_white_right.png" alt=">" title="show/hide codetrace panel"/>
-        </div>
-
-        <!--Actions panel-->
-        <div id="actions" class="panel">
-            <p id="create">Create</p>
-            <p id="sort">Sort</p>
-        </div>
-        <div id="actions-hide" class="panel-hide">
-            <img src="https://visualgo.net/img/arrow_white_right.png" alt=">" title="show/hide actions panel"/>
-        </div>
-        <!--Actions extra panel-->
-        <div id="actions-extras">
-            <div class="create action-menu-pullout">
-                <div id="create-random" class="execAction new-menu-option">
-                    <p>Random</p>
-                </div>
-                <div id="create-userdefined-input" class="new-menu-option">
-                    <input type="text" id="userdefined-input" title="Enter a list of numbers, separated by commas."
-                           autocomplete="off"/>
-                </div>
-                <div id="create-userdefined-go" class="execAction new-menu-option">
-                    <p>Go</p>
-                </div>
-                <div id="create-err" class="err"></div>
+        <div class="svg-container" style="text-align: center;">
+            <svg id="viz-canvas"></svg>
+            <div id="timeline" style="text-align: center;">
+                <i class="material-icons" id="go-to-beginning" onclick="goToBeginning()"><span
+                        class="glyphicon glyphicon-fast-backward"></span></i>
+                <i class="material-icons" id="previous" onclick="stepBackward()"><span
+                        class="glyphicon glyphicon-step-backward"></span></i>
+                <i class="material-icons" id="pause" onclick="pause()"><span
+                        class="glyphicon glyphicon-pause"></span></i>
+                <i class="material-icons" id="play" onclick="play()"><span class="glyphicon glyphicon-play"></span></i>
+                <i class="material-icons" id="next" onclick="stepForward()"><span
+                        class="glyphicon glyphicon-step-forward"></span></i>
+                <i class="material-icons" id="go-to-end" onclick="goToEnd()"><span
+                        class="glyphicon glyphicon-fast-forward"></span></i>
             </div>
         </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="form-group">
+            <label for="log">Log:</label>
+            <textarea class="form-control" rows="10" id="log" style="cursor: auto; resize: none;" disabled></textarea>
+        </div>
+    </div>
 
-        <svg id="viz-canvas"></svg>
+    <!--Status panel-->
+    <div id="status" class="panel"><p></p></div>
+    <div id="status-hide" class="panel-hide">
+        <img src="https://visualgo.net/img/arrow_white_right.png" alt=">" title="show/hide status panel"/>
+    </div>
+
+    <!-- Codetrace panel-->
+    <div id="codetrace" class="panel">
+        <p id="code1" style="padding-top: 10px;"></p>
+        <p id="code2"></p>
+        <p id="code3"></p>
+        <p id="code4"></p>
+        <p id="code5"></p>
+        <p id="code6"></p>
+        <p id="code7" style="padding-bottom: 10px;"></p>
+    </div>
+    <div id="codetrace-hide" class="panel-hide">
+        <img src="https://visualgo.net/img/arrow_white_right.png" alt=">" title="show/hide codetrace panel"/>
+    </div>
+
+    <!--Actions panel-->
+    <div id="actions" class="panel">
+        <p id="create">Create</p>
+        <p id="sort">Sort</p>
+    </div>
+    <div id="actions-hide" class="panel-hide">
+        <img src="https://visualgo.net/img/arrow_white_right.png" alt=">" title="show/hide actions panel"/>
+    </div>
+    <!--Actions extra panel-->
+    <div id="actions-extras">
+        <div class="create action-menu-pullout">
+            <div id="create-random" class="execAction new-menu-option">
+                <p>Random</p>
+            </div>
+            <div id="create-userdefined-input" class="new-menu-option">
+                <input type="text" id="userdefined-input" title="Enter a list of numbers, separated by commas."
+                       autocomplete="off"/>
+            </div>
+            <div id="create-userdefined-go" class="execAction new-menu-option">
+                <p>Go</p>
+            </div>
+            <div id="create-err" class="err"></div>
+        </div>
     </div>
 </div>
 </body>
