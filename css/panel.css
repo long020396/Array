@@ -61,7 +61,7 @@
 }
 
 #status {
-    bottom: 240px;
+    bottom: 340px;
     right: 43px;
     height: 54px;
     white-space: normal;
@@ -73,7 +73,7 @@
 }
 
 #status-hide {
-    bottom: 255px;
+    bottom: 355px;
     right: 0px;
     padding: 19px 14px 19px 15px;
     background-color: #42A5F5;
@@ -85,9 +85,9 @@
 }
 
 #codetrace {
-    bottom: 40px;
+    bottom: -10px;
     right: 43px;
-    height: 200px;
+    height: 350px;
     font-family: "Courier New", Courier, monospace !important;
     background-color: #66BB6A;
 }
@@ -101,9 +101,9 @@
 }
 
 #codetrace-hide {
-    bottom: 60px;
+    bottom: 10px;
     right: 0px;
-    padding: 88px 14px 88px 15px;
+    padding: 165px 14px 165px 15px;
     transform: rotate(180deg) !important;
     background-color: #66BB6A;
     -ms-transform: rotate(180deg);
